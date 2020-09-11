@@ -5,6 +5,8 @@ import java.util.Scanner;
 
 public class Main {
 
+	static double percentError;
+	
 	public static void main(String[] args) {
 
 		double defaultMulti = 0.02;
@@ -57,6 +59,7 @@ public class Main {
 		int select = promptOptimize(myObj);
 		ArrayList<Sens> closest = new ArrayList<Sens>(minimize(findBest(newAds, defaultMulti, select)));
 		printArrayList(closest);
+		System.out.println("If Nothing Appeared, Try Again With A Higher Percent Error");
 
 	}
 
@@ -68,7 +71,7 @@ public class Main {
 	public static void printArrayList(ArrayList<Sens> closest) {
 		for(int i = 0; i < closest.size(); i++) {
 			System.out.println();
-			System.out.println("Multiplier:"+closest.get(i).getMulti());
+			System.out.println("ADSMouseMultiplierUnit = "+closest.get(i).getMulti());
 			System.out.println("ADS 1x = " + closest.get(i).getAds1());
 			System.out.println("ADS 1.5x =" + closest.get(i).getAds15());
 			System.out.println("ADS 2x = " + closest.get(i).getAds2());
@@ -149,32 +152,31 @@ public class Main {
 			double adjAds15 = Math.round(ads15);
 			double adjAds2 = Math.round(ads2);
 			double adjAds25 = Math.round(ads25);
-			double adjAds3 = Math.round(ads3);
-			double adjAds4 = Math.round(ads4);
-			double adjAds5 = Math.round(ads5);
-			double adjAds12 = Math.round(ads12);
+			//double adjAds3 = Math.round(ads3);
+			//double adjAds4 = Math.round(ads4);
+			//double adjAds5 = Math.round(ads5);
+			//double adjAds12 = Math.round(ads12);
 
 			double pError1 = percentError(adjAds1, ads1);
 			double pError15 = percentError(adjAds15, ads15);
 			double pError2 = percentError(adjAds2, ads2);
 			double pError25 = percentError(adjAds25, ads25);
-			double pError3 = percentError(adjAds3, ads3);
-			double pError4 = percentError(adjAds4, ads4);
-			double pError5 = percentError(adjAds5, ads5);
-			double pError12 = percentError(adjAds12, ads12);
+			//double pError3 = percentError(adjAds3, ads3);
+			//double pError4 = percentError(adjAds4, ads4);
+			//double pError5 = percentError(adjAds5, ads5);
+			//double pError12 = percentError(adjAds12, ads12);
 
-			if(checkError(pError1, pError15, pError2, pError25, pError3, pError4, pError5, pError12)) {
+			if(checkError(pError1, pError15, pError2, pError25)) {
 				possible.add(collection.get(i));
 			}
 			else {
-				//System.out.println("Error");
 			}
 		}
 		return possible;
 	}
 
-	public static boolean checkError(double a, double b, double c, double d, double e, double f, double g, double h) {
-		if(a < 0.14 && b < 0.14 && c < 0.14 && d < 0.14 && e < 0.14 && f < 0.14 && g < 0.14 && h < 0.14 ) {
+	public static boolean checkError(double a, double b, double c, double d) {
+		if(a < percentError && b < percentError && c < percentError && d < percentError) {
 			return true;
 		}
 		else {
@@ -189,16 +191,14 @@ public class Main {
 	}
 
 	public static int promptOptimize(Scanner myObj) {
-		System.out.println("\nWhich Zoom Level Would You Like To Optimize (1-8):");
+		System.out.println("\nWhich Zoom Level Would You Like To Optimize (1-4):");
 		System.out.println("1.ADS 1x");
 		System.out.println("2.ADS 1.5x");
 		System.out.println("3.ADS 2x");
 		System.out.println("4.ADS 2.5x");
-		System.out.println("5.ADS 3x");
-		System.out.println("6.ADS 4x");
-		System.out.println("7.ADS 5x");
-		System.out.println("8.ADS 12x");
 		int select = myObj.nextInt();
+		System.out.println("Enter Percent Error You Are Okay With (The Smaller the More Accurate) (ex for 0.4% Enter 0.4)");
+		percentError = myObj.nextDouble();
 		return select;
 	}
 }
